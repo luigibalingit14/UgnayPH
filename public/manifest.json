@@ -21,6 +21,10 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["news", "education", "utilities"],
+  "categories": [
+    "news",
+    "education",
+    "utilities"
+  ],
   "lang": "en-PH"
 }

@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Briefcase, MapPin, Send, Loader2, Bot, Filter, Clock, Building2, DollarSign, Zap, Search } from "lucide-react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP, ScrollTrigger);
+}
 
 type Job = {
   id: string;
@@ -30,6 +37,7 @@ const jobTypes = [
 const regions = ["NCR","CAR","Region I","Region II","Region III","Region IV-A","Region IV-B","Region V","Region VI","Region VII","Region VIII","Region IX","Region X","Region XI","Region XII","CARAGA","BARMM"];
 
 export default function JobsPage() {
+  const container = useRef<HTMLDivElement>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -56,6 +64,19 @@ export default function JobsPage() {
   }, [filterRegion, filterType]);
 
   useEffect(() => { if (activeTab === "browse") fetchJobs(); }, [fetchJobs, activeTab]);
+
+  useGSAP(() => {
+    if (!container.current) return;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.fromTo(".hero-badge", { y: -30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.2);
+    tl.fromTo(".hero-title", { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1 }, 0.4);
+    tl.fromTo(".hero-desc", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.6);
+
+    gsap.fromTo(".module-anim",
+      { y: 40, autoAlpha: 0 },
+      { scrollTrigger: { trigger: ".module-content", start: "top 85%" }, y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1, ease: "power3.out" }
+    );
+  }, { scope: container });
 
   const postJob = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,24 +115,24 @@ export default function JobsPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" ref={container}>
       {/* Hero */}
       <section className="relative py-14 overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-40" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(16,185,129,0.15) 0%, transparent 70%)" }} />
         <div className="container mx-auto px-4 relative z-10 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/25 text-emerald-300">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 border border-emerald-500/25 text-emerald-300">
             <Briefcase className="h-3.5 w-3.5" /> Employment & Economic Opportunities · SDG 8
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
+          <h1 className="hero-title text-4xl md:text-5xl font-display font-bold text-white">
             Find Your <span style={{ color: "#10b981" }}>Opportunity</span>
           </h1>
-          <p className="text-white/50 max-w-xl mx-auto">Browse job listings, post vacancies, and let AI match your skills to your dream role.</p>
+          <p className="hero-desc text-white/50 max-w-xl mx-auto">Browse job listings, post vacancies, and let AI match your skills to your dream role.</p>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 pb-20">
-        <div className="max-w-5xl mx-auto">
+      <div className="container mx-auto px-4 pb-20 module-content">
+        <div className="max-w-5xl mx-auto module-anim">
           {/* Tabs */}
           <div className="flex gap-1 mb-6 bg-white/03 border border-white/06 p-1 rounded-xl w-fit">
             {[{key:"browse",label:"Browse Jobs",icon:Search},{key:"post",label:"Post a Job",icon:Send},{key:"ai",label:"AI Skill Match",icon:Bot}].map(t => (

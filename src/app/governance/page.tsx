@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ShieldCheck, Send, ThumbsUp, Clock, Tag, Loader2, Building2, MapPin, Bot, Zap, Filter } from "lucide-react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP, ScrollTrigger);
+}
 
 type Complaint = {
   id: string;
@@ -34,6 +41,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function GovernancePage() {
+  const container = useRef<HTMLDivElement>(null);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -55,6 +63,19 @@ export default function GovernancePage() {
   }, [filterCat]);
 
   useEffect(() => { fetchComplaints(); }, [fetchComplaints]);
+
+  useGSAP(() => {
+    if (!container.current) return;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.fromTo(".hero-badge", { y: -30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.2);
+    tl.fromTo(".hero-title", { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1 }, 0.4);
+    tl.fromTo(".hero-desc", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.6);
+
+    gsap.fromTo(".module-anim",
+      { y: 40, autoAlpha: 0 },
+      { scrollTrigger: { trigger: ".module-content", start: "top 85%" }, y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1, ease: "power3.out" }
+    );
+  }, { scope: container });
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,26 +111,26 @@ export default function GovernancePage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" ref={container}>
       {/* Hero */}
       <section className="relative py-14 overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-40" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(244,63,94,0.15) 0%, transparent 70%)" }} />
         <div className="container mx-auto px-4 relative z-10 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-rose-500/10 border border-rose-500/25 text-rose-300">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-rose-500/10 border border-rose-500/25 text-rose-300">
             <ShieldCheck className="h-3.5 w-3.5" /> Transparency & Good Governance · SDG 16
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
+          <h1 className="hero-title text-4xl md:text-5xl font-display font-bold text-white">
             Citizen <span style={{ color: "#f43f5e" }}>Governance</span> Watch
           </h1>
-          <p className="text-white/50 max-w-xl mx-auto">Submit complaints, track government issues, and hold institutions accountable together.</p>
+          <p className="hero-desc text-white/50 max-w-xl mx-auto">Submit complaints, track government issues, and hold institutions accountable together.</p>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 pb-20">
+      <div className="container mx-auto px-4 pb-20 module-content">
         <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {/* Form */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-4 module-anim">
             <div className="glass-card p-6 space-y-4">
               <h2 className="font-display font-bold text-white flex items-center gap-2">
                 <Send className="h-5 w-5 text-rose-400" /> File a Complaint
@@ -149,7 +170,7 @@ export default function GovernancePage() {
           </div>
 
           {/* Feed */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-4 module-anim">
             <div className="flex items-center justify-between flex-wrap gap-3">
               <h2 className="font-display font-bold text-white flex items-center gap-2">
                 <Building2 className="h-5 w-5 text-rose-400" /> Public Issues Board

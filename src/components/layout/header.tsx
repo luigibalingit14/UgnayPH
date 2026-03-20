@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import {
   Menu, X, User, LogOut, LayoutDashboard,
   Car, Shield, Briefcase, Heart, Leaf, ShieldCheck,
   ChevronDown,
 } from "lucide-react";
+import { UgnayLogo } from "@/components/ui/ugnay-logo";
 
 const modules = [
   { href: "/mobility",   label: "Mobility",    icon: Car,         color: "text-amber-400",   desc: "Traffic & Transport" },
@@ -25,18 +28,20 @@ export function Header() {
   const [modulesOpen, setModulesOpen] = useState(false);
   const pathname = usePathname();
   const { user, profile, signOut, loading } = useAuth();
+  
+  const headerRef = useRef<HTMLElement>(null);
+  useGSAP(() => {
+    gsap.from(headerRef.current, { y: -80, opacity: 0, duration: 1.2, ease: "power4.out", delay: 0.1 });
+  });
 
   return (
-    <header className="sticky top-0 z-50 w-full glass-nav">
+    <header ref={headerRef} className="sticky top-0 z-50 w-full glass-nav">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-ph-blue rounded-xl blur-md opacity-40 group-hover:opacity-100 transition-opacity animate-pulse-glow" />
-              <div className="relative bg-gradient-to-br from-ph-blue via-ph-yellow to-ph-red text-white font-bold text-sm px-2.5 py-1.5 rounded-xl leading-none">
-                <span className="font-display drop-shadow-md">U</span>
-              </div>
+          <Link href="/" className="flex items-center gap-3 shrink-0 group">
+            <div className="relative shrink-0 flex items-center justify-center">
+              <UgnayLogo className="w-10 h-10 group-hover:scale-105 transition-transform duration-300 drop-shadow-md" />
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-display font-bold text-base text-white group-hover:text-ph-yellow transition-colors">

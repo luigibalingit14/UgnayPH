@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Heart, MapPin, Phone, Search, Calendar, Loader2, Bot, Zap, Send, Clock, CheckCircle, XCircle } from "lucide-react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP, ScrollTrigger);
+}
 
 type HealthCenter = {
   id: string;
@@ -28,6 +35,7 @@ const centerTypes: Record<string, string> = {
 const regions = ["NCR","CAR","Region I","Region II","Region III","Region IV-A","Region IV-B","Region V","Region VI","Region VII","Region VIII","Region IX","Region X","Region XI","Region XII","CARAGA","BARMM"];
 
 export default function HealthPage() {
+  const container = useRef<HTMLDivElement>(null);
   const [centers, setCenters] = useState<HealthCenter[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"centers"|"symptoms"|"appointment">("centers");
@@ -54,6 +62,19 @@ export default function HealthPage() {
   }, [filterRegion, searchQuery]);
 
   useEffect(() => { if (activeTab === "centers") fetchCenters(); }, [fetchCenters, activeTab]);
+
+  useGSAP(() => {
+    if (!container.current) return;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.fromTo(".hero-badge", { y: -30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.2);
+    tl.fromTo(".hero-title", { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1 }, 0.4);
+    tl.fromTo(".hero-desc", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.6);
+
+    gsap.fromTo(".module-anim",
+      { y: 40, autoAlpha: 0 },
+      { scrollTrigger: { trigger: ".module-content", start: "top 85%" }, y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1, ease: "power3.out" }
+    );
+  }, { scope: container });
 
   const checkSymptoms = async () => {
     if (!symptoms.trim()) return;
@@ -82,24 +103,24 @@ export default function HealthPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" ref={container}>
       {/* Hero */}
       <section className="relative py-14 overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-40" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(59,130,246,0.15) 0%, transparent 70%)" }} />
         <div className="container mx-auto px-4 relative z-10 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/25 text-blue-300">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-blue-500/10 border border-blue-500/25 text-blue-300">
             <Heart className="h-3.5 w-3.5" /> Healthcare Access · SDG 3 & 10
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
+          <h1 className="hero-title text-4xl md:text-5xl font-display font-bold text-white">
             <span style={{ color: "#3b82f6" }}>Health</span>Reach PH
           </h1>
-          <p className="text-white/50 max-w-xl mx-auto">Find health centers near you, get AI symptom advice, and book appointments — even in remote areas.</p>
+          <p className="hero-desc text-white/50 max-w-xl mx-auto">Find health centers near you, get AI symptom advice, and book appointments — even in remote areas.</p>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 pb-20">
-        <div className="max-w-5xl mx-auto">
+      <div className="container mx-auto px-4 pb-20 module-content">
+        <div className="max-w-5xl mx-auto module-anim">
           <div className="flex gap-1 mb-6 bg-white/03 border border-white/06 p-1 rounded-xl w-fit">
             {[{key:"centers",label:"Health Centers",icon:MapPin},{key:"symptoms",label:"Symptom Check",icon:Bot},{key:"appointment",label:"Book Appointment",icon:Calendar}].map(t => (
               <button key={t.key} onClick={() => setActiveTab(t.key as "centers"|"symptoms"|"appointment")} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab===t.key?"bg-white/08 text-white":"text-white/40 hover:text-white/70"}`}>

@@ -79,112 +79,62 @@ Red flags to look for (Philippine context):
 
 Remember: Your analysis helps protect Filipinos from disinformation. Be accurate and helpful!`;
 
-// Gemini models - NO LONGER USED
-// const GEMINI_VISION_MODELS = [...];
-// const GEMINI_TEXT_MODELS = [...];
-
-// Try Claude API (Anthropic)
-async function tryClaude(prompt: string, apiKey: string, imageData?: string, mimeType?: string): Promise<{ success: boolean; text?: string; error?: string }> {
+// NVIDIA API Integration
+async function tryNvidia(prompt: string, apiKey: string, imageData?: string, mimeType?: string): Promise<{ success: boolean; text?: string; error?: string }> {
   try {
-    console.log("Trying Claude API...");
+    console.log("Trying NVIDIA API...");
 
-    const messageContent: Array<{ type: string; text?: string; source?: { type: string; media_type: string; data: string } }> = [
-      { type: "text", text: prompt }
-    ];
-
+    // For image analysis, include image data in the message
+    let messages;
     if (imageData && mimeType) {
-      console.log("Claude: Adding image to request");
-      messageContent.push({
-        type: "image",
-        source: {
-          type: "base64",
-          media_type: mimeType,
-          data: imageData
-        }
-      });
+      console.log("NVIDIA: Adding image to request");
+      messages = [{
+        role: "user",
+        content: [
+          { type: "text", text: prompt },
+          { type: "image_url", image_url: { url: `data:${mimeType};base64,${imageData}` } }
+        ]
+      }];
+    } else {
+      messages = [{ role: "user", content: prompt }];
     }
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01"
-      },
-      body: JSON.stringify({
-        model: "claude-3-5-sonnet-20241022",
-        max_tokens: 2048,
-        messages: [{ role: "user", content: messageContent }],
-      }),
-    });
+    // Use vision model for images, text model otherwise
+    const model = imageData ? "nvidia/llama-3.2-nv-vision-instruct" : "meta/llama-3.1-8b-instruct";
 
-    console.log(`Claude response status: ${response.status}`);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Claude error:", JSON.stringify(errorData, null, 2));
-      return { success: false, error: errorData.error?.message || "Claude API error" };
-    }
-
-    const data = await response.json();
-    const text = data.content?.[0]?.text;
-
-    if (text) {
-      console.log("✓ Success with Claude API");
-      return { success: true, text };
-    }
-
-    return { success: false, error: "Empty response from Claude" };
-  } catch (error) {
-    console.error("Claude exception:", error);
-    return { success: false, error: String(error) };
-  }
-}
-
-// Try Groq API (fallback)
-async function tryGroq(prompt: string, apiKey: string, imageData?: string, mimeType?: string): Promise<{ success: boolean; text?: string; error?: string }> {
-  try {
-    console.log("Trying Groq API as fallback...");
-
-    let fullPrompt = prompt;
-    if (imageData && mimeType) {
-      console.log("Groq: Using image data in prompt");
-      fullPrompt = `${prompt}\n\n[Image Data: ${mimeType}]\nBase64: ${imageData.substring(0, 100)}...`;
-    }
-
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
-        messages: [{ role: "user", content: fullPrompt }],
+        model: model,
+        messages: messages,
         temperature: 0.7,
         max_tokens: 2048,
       }),
     });
 
-    console.log(`Groq response status: ${response.status}`);
+    console.log(`NVIDIA response status: ${response.status}`);
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Groq error:", JSON.stringify(errorData, null, 2));
-      return { success: false, error: errorData.error?.message || "Groq API error" };
+      console.error("NVIDIA error:", JSON.stringify(errorData, null, 2));
+      return { success: false, error: errorData.error?.message || "NVIDIA API error" };
     }
 
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content;
 
     if (text) {
-      console.log("✓ Success with Groq API");
+      console.log("✓ Success with NVIDIA API");
       return { success: true, text };
     }
 
-    return { success: false, error: "Empty response from Groq" };
+    return { success: false, error: "Empty response from NVIDIA" };
   } catch (error) {
-    console.error("Groq exception:", error);
+    console.error("NVIDIA exception:", error);
     return { success: false, error: String(error) };
   }
 }
@@ -249,12 +199,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const claudeKey = process.env.ANTHROPIC_API_KEY;
-    const groqKey = process.env.GROQ_API_KEY;
+    const nvidiaKey = process.env.NVIDIA_API_KEY;
 
-    if (!claudeKey && !groqKey) {
+    if (!nvidiaKey) {
       return NextResponse.json(
-        { success: false, error: "No API keys configured. Add ANTHROPIC_API_KEY or GROQ_API_KEY to .env.local" },
+        { success: false, error: "No API key configured. Add NVIDIA_API_KEY to .env.local" },
         { status: 500 }
       );
     }
@@ -263,49 +212,25 @@ export async function POST(request: NextRequest) {
     let provider = "";
 
     if (isImageAnalysis) {
-      // Image analysis - try Claude first, then Groq as fallback
+      // Image analysis with NVIDIA
       const imagePrompt = IMAGE_ANALYSIS_PROMPT.replace("{FORMAT_INSTRUCTIONS}", FORMAT_INSTRUCTIONS);
 
-      if (claudeKey) {
-        console.log("Attempting image analysis with Claude...");
-        const claudeResult = await tryClaude(imagePrompt, claudeKey, imageData, imageMimeType);
-        if (claudeResult.success && claudeResult.text) {
-          responseText = claudeResult.text;
-          provider = "claude";
-        }
-      }
-
-      // Fallback to Groq if Claude failed
-      if (!responseText && groqKey) {
-        console.log("Claude failed, trying Groq as fallback...");
-        const groqResult = await tryGroq(imagePrompt, groqKey, imageData, imageMimeType);
-        if (groqResult.success && groqResult.text) {
-          responseText = groqResult.text;
-          provider = "groq";
-        }
+      console.log("Attempting image analysis with NVIDIA...");
+      const nvidiaResult = await tryNvidia(imagePrompt, nvidiaKey, imageData, imageMimeType);
+      if (nvidiaResult.success && nvidiaResult.text) {
+        responseText = nvidiaResult.text;
+        provider = "nvidia";
       }
     } else {
-      // Text analysis - try Claude first, then Groq as fallback
+      // Text analysis with NVIDIA
       const textPrompt = TEXT_ANALYSIS_PROMPT
         .replace("{CONTENT}", content)
         .replace("{FORMAT_INSTRUCTIONS}", FORMAT_INSTRUCTIONS);
 
-      if (claudeKey) {
-        const claudeResult = await tryClaude(textPrompt, claudeKey);
-        if (claudeResult.success && claudeResult.text) {
-          responseText = claudeResult.text;
-          provider = "claude";
-        }
-      }
-
-      // Fallback to Groq if Claude failed
-      if (!responseText && groqKey) {
-        console.log("Claude failed, trying Groq as fallback...");
-        const groqResult = await tryGroq(textPrompt, groqKey);
-        if (groqResult.success && groqResult.text) {
-          responseText = groqResult.text;
-          provider = "groq";
-        }
+      const nvidiaResult = await tryNvidia(textPrompt, nvidiaKey);
+      if (nvidiaResult.success && nvidiaResult.text) {
+        responseText = nvidiaResult.text;
+        provider = "nvidia";
       }
     }
 
