@@ -73,7 +73,7 @@ export function MemeGenerator({ data, onShare }: MemeGeneratorProps) {
   return (
     <div className="space-y-4">
       {/* Meme Preview */}
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden glass-card border-0 bg-black/20 group">
         <div
           ref={memeRef}
           className={`relative bg-gradient-to-br ${getBgGradient()} p-6 aspect-square max-w-md mx-auto`}

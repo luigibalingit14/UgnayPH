@@ -1,15 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ToastContextProvider } from "@/hooks/use-toast";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
 
 export const metadata: Metadata = {
   title: "UgnayPH — Connecting Filipinos to Solutions",
@@ -50,7 +44,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={`${inter.variable} antialiased min-h-screen flex flex-col`}>
+      <body className="antialiased min-h-screen flex flex-col">
         <AuthProvider>
           <ToastContextProvider>
             <Header />

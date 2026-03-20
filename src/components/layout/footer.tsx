@@ -1,5 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Car, Shield, ShieldCheck, Briefcase, Heart, Leaf, Github, Mail } from "lucide-react";
+import { UgnayLogo } from "@/components/ui/ugnay-logo";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP, ScrollTrigger);
+}
 
 const modules = [
   { href: "/mobility",   label: "Smart Mobility",   icon: Car },
@@ -11,15 +22,26 @@ const modules = [
 ];
 
 export function Footer() {
+  const footerRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    if (!footerRef.current) return;
+    gsap.fromTo(
+      footerRef.current,
+      { y: 50, autoAlpha: 0 },
+      { scrollTrigger: { trigger: footerRef.current, start: "top 95%" }, y: 0, autoAlpha: 1, duration: 1, ease: "power3.out" }
+    );
+  }, { scope: footerRef });
+
   return (
-    <footer className="border-t border-white/06 mt-16">
+    <footer ref={footerRef} className="border-t border-white/06 mt-16">
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-3 gap-10">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="bg-gradient-to-br from-ph-blue via-ph-yellow to-ph-red text-white font-bold text-sm px-2.5 py-1.5 rounded-xl">
-                <span className="drop-shadow-sm">U</span>
+            <div className="flex items-center gap-3">
+              <div className="relative shrink-0 flex items-center justify-center">
+                <UgnayLogo className="w-9 h-9 opacity-90 hover:opacity-100 transition-opacity" />
               </div>
               <span className="font-display font-bold text-lg text-white">
                 Ugnay<span className="text-ph-yellow">PH</span>

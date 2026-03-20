@@ -43,10 +43,10 @@ export function ExampleCard({ example, onClick, selected }: ExampleCardProps) {
   return (
     <Card
       className={cn(
-        "cursor-pointer transition-all duration-200 hover:-translate-y-1",
+        "cursor-pointer transition-all duration-300 hover:-translate-y-1 glass-card border-[0.5px]",
         selected
-          ? "ring-2 ring-primary shadow-lg shadow-primary/20"
-          : "hover:shadow-lg",
+          ? "ring-1 ring-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.2)] bg-white/10"
+          : "hover:bg-white/10 box-shadow-none",
         config.borderColor
       )}
       onClick={() => onClick(example)}

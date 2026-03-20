@@ -56,17 +56,17 @@ export function ShareDialog({ score, label, content, children }: ShareDialogProp
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md glass-card-strong border-white/10 !bg-black/80 shadow-2xl backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle>I-share ang Vibe Check!</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-white">I-share ang Vibe Check!</DialogTitle>
+          <DialogDescription className="text-white/60">
             Tulungan mo rin ang iba na maging informed. Share na!
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Preview Text */}
-          <div className="bg-muted p-4 rounded-lg text-sm">
+          <div className="bg-white/5 border border-white/10 p-4 rounded-xl text-sm text-white/90">
             <p className="whitespace-pre-wrap">{shareText}</p>
           </div>
 

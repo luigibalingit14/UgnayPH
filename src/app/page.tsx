@@ -1,9 +1,19 @@
+"use client";
+
 import Link from "next/link";
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Car, Shield, ShieldCheck, Briefcase, Heart, Leaf,
   ArrowRight, Zap, Globe, Users, Database,
 } from "lucide-react";
 import { SyncButton } from "@/components/features/sync-button";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP, ScrollTrigger);
+}
 
 const modules = [
   {
@@ -101,28 +111,56 @@ const stats = [
 ];
 
 export default function HomePage() {
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    
+    tl.fromTo(".hero-blob", { scale: 0.6 }, { scale: 1, duration: 2, stagger: 0.3 }, 0);
+    tl.fromTo(".hero-badge", { y: -30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.2);
+    tl.fromTo(".hero-title", { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1 }, 0.4);
+    tl.fromTo(".hero-desc", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.6);
+    tl.fromTo(".hero-cta", { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, stagger: 0.1, ease: "back.out(1.5)" }, 0.7);
+    tl.fromTo(".stat-card", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1 }, 0.8);
+
+    gsap.fromTo(".modules-header", 
+      { y: 50, autoAlpha: 0 },
+      { scrollTrigger: { trigger: ".modules-section", start: "top 85%" }, y: 0, autoAlpha: 1, duration: 1, ease: "power3.out" }
+    );
+
+    gsap.fromTo(".module-card-anim", 
+      { y: 50, autoAlpha: 0 },
+      { scrollTrigger: { trigger: ".modules-grid", start: "top 85%" }, y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.15, ease: "power3.out" }
+    );
+
+    gsap.fromTo(".bottom-cta-card", 
+      { scale: 0.9, y: 30, autoAlpha: 0 },
+      { scrollTrigger: { trigger: ".bottom-cta-section", start: "top 85%" }, scale: 1, y: 0, autoAlpha: 1, duration: 1, ease: "power3.out" }
+    );
+  }, { scope: container });
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" ref={container}>
       {/* ── HERO ── */}
       <section className="relative pt-20 pb-24 overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-50" />
         <div className="absolute inset-0 hero-mesh" />
 
         {/* Floating blobs */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-ph-blue/30 rounded-full blur-3xl pointer-events-none animate-float-slow" />
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-ph-red/20 rounded-full blur-3xl pointer-events-none animate-float-medium" />
-        <div className="absolute inset-0 ph-sunburst opacity-40 animate-spin-slow pointer-events-none mix-blend-screen" />
+        <div className="hero-blob absolute top-20 left-10 w-72 h-72 bg-ph-blue/30 rounded-full blur-3xl pointer-events-none animate-float-slow" />
+        <div className="hero-blob absolute bottom-10 right-10 w-80 h-80 bg-ph-red/20 rounded-full blur-3xl pointer-events-none animate-float-medium" />
+        <div className="hero-blob absolute inset-0 ph-sunburst opacity-40 animate-spin-slow pointer-events-none mix-blend-screen" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-ph-blue/20 border border-ph-blue/40 text-blue-200 animate-pulse-glow">
+            <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-ph-blue/20 border border-ph-blue/40 text-blue-200 animate-pulse-glow">
               <span className="w-1.5 h-1.5 rounded-full bg-ph-yellow animate-ping" />
               InterCICSkwela Hackathon 2026 · All 6 SDG Challenges
             </div>
 
             {/* Headline */}
-            <h1 className="text-5xl md:text-7xl font-display font-bold leading-[1.08] tracking-tight hover:scale-[1.02] transition-transform duration-500">
+            <h1 className="hero-title text-5xl md:text-7xl font-display font-bold leading-[1.08] tracking-tight hover:scale-[1.02] transition-transform duration-500">
               <span className="pinoy-gradient-text drop-shadow-[0_0_15px_rgba(252,209,22,0.4)]">Ugnay</span>
               <span className="text-white">PH</span>
               <br />
@@ -131,13 +169,13 @@ export default function HomePage() {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-white/55 max-w-2xl mx-auto leading-relaxed">
+            <p className="hero-desc text-lg md:text-xl text-white/55 max-w-2xl mx-auto leading-relaxed">
               Connecting every Filipino to AI-powered tools for safer roads, truth online, transparent government, 
               better jobs, accessible healthcare, and sustainable farming.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+            <div className="hero-cta flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Link href="/vibecheck" className="btn-primary text-base px-8 py-3.5">
                 <Shield className="h-5 w-5" />
                 Try VibeCheck PH
@@ -148,12 +186,14 @@ export default function HomePage() {
               </Link>
             </div>
 
-            <SyncButton />
+            <div className="hero-cta">
+              <SyncButton />
+            </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 max-w-2xl mx-auto">
               {stats.map((s) => (
-                <div key={s.label} className="glass-card p-4 text-center">
+                <div key={s.label} className="stat-card glass-card p-4 text-center">
                   <s.icon className={`h-5 w-5 mx-auto mb-1.5 ${s.color}`} />
                   <div className="text-2xl font-display font-bold text-white">{s.value}</div>
                   <div className="text-xs text-white/40">{s.label}</div>
@@ -165,9 +205,9 @@ export default function HomePage() {
       </section>
 
       {/* ── MODULE GRID ── */}
-      <section id="modules" className="py-20 relative">
+      <section id="modules" className="modules-section py-20 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-14">
+          <div className="modules-header text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-3">
               Six Modules, One Mission
             </h2>
@@ -176,12 +216,12 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
+          <div className="modules-grid grid md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
             {modules.map((m) => (
               <Link
                 key={m.href}
                 href={m.href}
-                className={`module-card group ${m.color} relative`}
+                className={`module-card-anim module-card group ${m.color} relative`}
                 style={{ ["--glow" as string]: m.glow }}
               >
                 {/* Background gradient */}
@@ -228,9 +268,9 @@ export default function HomePage() {
       </section>
 
       {/* ── BUILT FOR PH ── */}
-      <section className="py-16">
+      <section className="bottom-cta-section py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto glass-card-strong p-10 text-center space-y-6">
+          <div className="bottom-cta-card max-w-3xl mx-auto glass-card-strong p-10 text-center space-y-6">
             <span className="text-4xl">🇵🇭</span>
             <h2 className="text-2xl md:text-3xl font-display font-bold text-white">
               Built for Every Filipino

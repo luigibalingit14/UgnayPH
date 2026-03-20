@@ -38,7 +38,7 @@ export function AnalysisCard({ analysis, content }: AnalysisCardProps) {
   };
 
   return (
-    <Card className="card-hover">
+    <Card className="glass-card border-0 bg-white/5 shadow-none pb-2">
       <CardHeader>
         <div className="flex items-center justify-between flex-wrap gap-2">
           <CardTitle className="flex items-center gap-2">

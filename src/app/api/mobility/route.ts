@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-async function callGemini(prompt: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY not set");
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-    }
-  );
+async function callNvidia(prompt: string): Promise<string> {
+  const apiKey = process.env.NVIDIA_API_KEY;
+  if (!apiKey) throw new Error("NVIDIA_API_KEY not set (check .env.local)");
+  const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: "meta/llama-3.1-8b-instruct",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+    }),
+  });
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  return data.choices?.[0]?.message?.content || "";
 }
 
 export async function GET(request: NextRequest) {
@@ -65,7 +66,7 @@ A traffic ${body.incident_type || "incident"} has been reported in ${body.city |
 Provide 3-4 practical, specific alternate route suggestions and general commuter tips for Filipinos affected by this situation.
 Write in a friendly, helpful tone mixing Tagalog and English. Keep it concise under 150 words.
 Format as numbered list.`;
-      const suggestion = await callGemini(prompt);
+      const suggestion = await callNvidia(prompt);
       return NextResponse.json({ success: true, ai_suggestion: suggestion });
     }
 
@@ -76,9 +77,10 @@ Format as numbered list.`;
     }
 
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from("mobility_reports")
-      .insert({ location, city: city || "Unknown", incident_type, severity, description: description || null })
+      .insert({ location, city: city || "Unknown", incident_type, severity, description: description || null, user_id: user?.id || null })
       .select()
       .single();
 

@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-async function callGemini(prompt: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY not set");
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-    }
-  );
+async function callNvidia(prompt: string): Promise<string> {
+  const apiKey = process.env.NVIDIA_API_KEY;
+  if (!apiKey) throw new Error("NVIDIA_API_KEY not set (check .env.local)");
+  const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: "meta/llama-3.1-8b-instruct",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+    }),
+  });
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  return data.choices?.[0]?.message?.content || "";
 }
 
 export async function GET(request: NextRequest) {
@@ -62,7 +63,7 @@ Include:
 7. 📱 Government programs that can help (e.g., DA programs, RCEF)
 
 Write in Taglish, friendly and practical tone suited for Filipino farmers. Keep under 300 words. Use emojis sparingly.`;
-      const advice = await callGemini(prompt);
+      const advice = await callNvidia(prompt);
       return NextResponse.json({ success: true, ai_advice: advice });
     }
 
@@ -73,12 +74,14 @@ Write in Taglish, friendly and practical tone suited for Filipino farmers. Keep 
     }
 
     const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from("agri_prices")
       .insert({
         crop, price_per_kg: Number(price_per_kg),
         unit: unit || "kg", location, region: region || "Region IV-A",
         farmer_name: farmer_name || null, contact: contact || null,
+        user_id: user?.id || null,
       })
       .select()
       .single();

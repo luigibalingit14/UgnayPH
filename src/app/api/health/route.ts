@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-async function callGemini(prompt: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY not set");
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-    }
-  );
+async function callNvidia(prompt: string): Promise<string> {
+  const apiKey = process.env.NVIDIA_API_KEY;
+  if (!apiKey) throw new Error("NVIDIA_API_KEY not set (check .env.local)");
+  const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: "meta/llama-3.1-8b-instruct",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
+    }),
+  });
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  return data.choices?.[0]?.message?.content || "";
 }
 
 export async function GET(request: NextRequest) {
@@ -52,9 +53,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: false, error: "All fields required" }, { status: 400 });
       }
       const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
       const { data, error } = await supabase
         .from("health_appointments")
-        .insert({ patient_name, contact_number, concern, preferred_date, health_center_id: health_center_id || null })
+        .insert({ patient_name, contact_number, concern, preferred_date, health_center_id: health_center_id || null, user_id: user?.id || null })
         .select()
         .single();
       if (error) throw error;
@@ -80,7 +82,7 @@ Provide a helpful, responsible response that includes:
 Write in Taglish (Filipino + English mix), warm and empathetic tone. Keep under 250 words.
 ⚠️ Always start with a clear disclaimer that this is not a substitute for professional medical advice.`;
 
-    const result = await callGemini(prompt);
+    const result = await callNvidia(prompt);
     return NextResponse.json({ success: true, ai_result: result });
   } catch (err) {
     console.error("health POST error:", err);

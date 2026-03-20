@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Car, MapPin, AlertTriangle, Clock, ThumbsUp, Loader2, Send, ChevronDown, Bot, Zap } from "lucide-react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP, ScrollTrigger);
+}
 
 type Report = {
   id: string;
@@ -26,6 +33,7 @@ const incidentTypes = [
 const cities = ["Manila", "Quezon City", "Makati", "Pasig", "Taguig", "Batangas City", "Lipa City", "Cebu City", "Davao City", "Iloilo City", "Cagayan de Oro", "Zamboanga City", "Other"];
 
 export default function MobilityPage() {
+  const container = useRef<HTMLDivElement>(null);
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -45,6 +53,19 @@ export default function MobilityPage() {
   }, []);
 
   useEffect(() => { fetchReports(); }, [fetchReports]);
+
+  useGSAP(() => {
+    if (!container.current) return;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.fromTo(".hero-badge", { y: -30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.2);
+    tl.fromTo(".hero-title", { y: 50, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1 }, 0.4);
+    tl.fromTo(".hero-desc", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 }, 0.6);
+
+    gsap.fromTo(".module-anim",
+      { y: 40, autoAlpha: 0 },
+      { scrollTrigger: { trigger: ".module-content", start: "top 85%" }, y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.1, ease: "power3.out" }
+    );
+  }, { scope: container });
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,26 +107,26 @@ export default function MobilityPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" ref={container}>
       {/* Hero */}
       <section className="relative py-14 overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-40" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(251,191,36,0.15) 0%, transparent 70%)" }} />
         <div className="container mx-auto px-4 relative z-10 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/25 text-amber-300">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 border border-amber-500/25 text-amber-300">
             <Car className="h-3.5 w-3.5" /> Smart Mobility & Transportation · SDG 9 & 11
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-white">
+          <h1 className="hero-title text-4xl md:text-5xl font-display font-bold text-white">
             Real-time <span style={{ color: "#fbbf24" }}>Traffic Alerts</span>
           </h1>
-          <p className="text-white/50 max-w-xl mx-auto">Report incidents, get AI route suggestions, and help fellow commuters navigate smarter.</p>
+          <p className="hero-desc text-white/50 max-w-xl mx-auto">Report incidents, get AI route suggestions, and help fellow commuters navigate smarter.</p>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 pb-20">
+      <div className="container mx-auto px-4 pb-20 module-content">
         <div className="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {/* Form */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-4 module-anim">
             <div className="glass-card p-6 space-y-4">
               <h2 className="font-display font-bold text-white flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-amber-400" /> Report an Incident
@@ -167,7 +188,7 @@ export default function MobilityPage() {
           </div>
 
           {/* Live Feed */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-4 module-anim">
             <div className="flex items-center justify-between">
               <h2 className="font-display font-bold text-white flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-amber-400" /> Live Traffic Feed
