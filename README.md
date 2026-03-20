@@ -2,7 +2,8 @@
 **One platform. Six solutions. Built for every Filipino.**
 
 > **InterCICSkwela Hackathon 2026 Entry**
-> **Team Leader**: Luigi Balingit (`luigibalingit14`)
+> **Team Leader**: Yun-tzu Cosing - Project Manager 
+>**Members**: Luigi Balingit - Developer  and John Andre Bermundo - UI/UX developer 
 
 ---
 
