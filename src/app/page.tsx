@@ -3,6 +3,7 @@ import {
   Car, Shield, ShieldCheck, Briefcase, Heart, Leaf,
   ArrowRight, Zap, Globe, Users, Database,
 } from "lucide-react";
+import { SyncButton } from "@/components/features/sync-button";
 
 const modules = [
   {
@@ -146,6 +147,8 @@ export default function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+
+            <SyncButton />
 
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 max-w-2xl mx-auto">
