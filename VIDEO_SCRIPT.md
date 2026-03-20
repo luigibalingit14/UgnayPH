@@ -1,216 +1,88 @@
-# VibeCheck PH - Video Demo Script
-**Duration: 3-5 minutes**
+# UgnayPH - Hackathon Pitch & Demo Video Script
+**Target Duration: 4 minutes (Allowed: 3-5 mins)**
 
 ---
 
-## 🎬 OPENING (0:00 - 0:30)
+## 🎬 INTRODUCTION (0:00 - 0:45)
 
-### Scene 1: Problem Hook
-**[Screen: Dark background with statistics appearing]**
+### Scene 1: The Problem
+**[Screen: Montage of Philippine challenges (Traffic, Fake News, Unemployment, Agriculture struggles)]**
 
 **Narrator:**
-> "Alam mo ba na 7 out of 10 Filipinos ang nahihirapan mag-identify ng fake news?"
+> "The Philippines faces immense challenges every day. Heavy traffic. The rapid spread of fake news. Lack of accessible healthcare. Farmers struggling with market prices. And citizens feeling disconnected from their government."
+> "Addressing these requires multiple apps, multiple platforms, and endless searching."
 
-**[Show scrolling social media posts with scam messages]**
-
-> "Every day, billions of pesos are lost to online scams. Fake news spreads 6 times faster than the truth. And our lolas, titas, and friends are sharing these without knowing..."
-
-**[Dramatic pause]**
-
-> "But what if there was a way to CHECK the VIBE before you share?"
-
----
-
-## 📱 INTRODUCING VIBECHECK PH (0:30 - 1:00)
-
-### Scene 2: Product Reveal
-**[Smooth transition to VibeCheck PH landing page]**
+### Scene 2: The Solution
+**[Screen: Smooth transition to the UgnayPH landing page with the Cyber-Pinoy glassmorphism UI]**
 
 **Narrator:**
-> "Introducing VibeCheck PH - your AI-powered kaibigan against disinformation!"
-
-**[Show the main interface with the tagline]**
-
-> "Paste anywhere. Get the real Vibe. Huwag maging sus!"
-
-**[Highlight the "Cyber-Pinoy" design]**
-
-> "Designed specifically for Filipinos, with familiar slang labels that make fact-checking... actually fun!"
+> "What if we could connect Filipinos to all these solutions in one place? Introducing **UgnayPH**—a unified, AI-powered platform addressing all 6 InterCICSkwela Hackathon challenges."
+> "Our mission: One platform. Six solutions. Built for every Filipino."
 
 ---
 
-## 🔍 LIVE DEMO - CORE FEATURE (1:00 - 2:30)
+## 💻 PROTOTYPE DEMONSTRATION (0:45 - 3:00)
 
-### Scene 3: Analyzing Fake Content
-**[Screen recording of actual usage]**
+### Scene 3: The Unified Hub & Design (0:45 - 1:15)
+**[Screen: Scrolling through the Home Page, highlighting the 6 module cards and animations]**
 
 **Narrator:**
-> "Let me show you how easy it is. Here's a suspicious post I received on Viber..."
+> "UgnayPH greets users with our custom 'Cyber-Pinoy' glassmorphism design. Notice the beautiful integrations of our flag's Royal Azure, Scarlet, and Sun Gold, combined with modern blurred interfaces and micro-animations for the best UI/UX experience."
 
-**[Paste the fake typhoon alert example]**
-
-> "Copy. Paste. And click 'CHECK VIBE'..."
-
-**[Show loading animation]**
-
-> "Our AI, powered by Google Gemini, analyzes the content for red flags common in Philippine scams..."
-
-**[Results appear with animation]**
-
-> "And boom! A 'SUS NA SUS' rating of 87! The Vibe Meter shows this is definitely dangerous."
-
-**[Scroll to red flags section]**
-
-> "See these red flags? Fake urgency, emotional manipulation, unverified source - all explained in Taglish para maintindihan ng lahat."
-
-**[Show literacy tips]**
-
-> "Plus, we give you actionable tips. Like checking PAGASA's official website or verifying with local DRRM offices."
-
-### Scene 4: Analyzing Legitimate Content
-**[Paste the real DepEd announcement]**
+### Scene 4: Deep Dive - VibeCheck PH (1:15 - 1:45)
+**[Screen: Clicking on the VibeCheck (Digital Literacy) module, pasting a fake news text]**
 
 **Narrator:**
-> "Now let's try a legitimate government announcement..."
+> "Let's look at Challenge 2: Digital Literacy. With **VibeCheck PH**, users can paste any suspicious text or URL. Powered by Google Gemini AI, the system analyzes the content for red flags, scores its authenticity using relatable Filipino slang like 'SUS NA SUS', and educates the user on how to spot disinformation."
 
-**[Show results]**
-
-> "Score of 15 - 'CHILL NA CHILL!' This is from an official source with proper formatting and verifiable information."
-
----
-
-## ⚔️ VIBE BATTLE FEATURE (2:30 - 3:00)
-
-### Scene 5: Battle Mode
-**[Navigate to Battle page]**
+### Scene 5: Deep Dive - HealthReach & AgriLink (1:45 - 2:30)
+**[Screen: Quickly navigating to HealthReach and then AgriLink]**
 
 **Narrator:**
-> "But wait, there's more! Introducing Vibe Battle - compare two posts side by side!"
+> "But UgnayPH doesn't stop there. 
+> For Healthcare, **HealthReach** provides AI symptom triage and helps rural users book appointments. 
+> For Agriculture, **AgriLink PH** gives farmers AI-driven crop advisories based on local data."
 
-**[Paste two different posts]**
-
-> "Perfect for when you see two versions of the same news and want to know which one to trust."
-
-**[Show battle results]**
-
-> "Post 2 wins! Now you know which source to follow."
-
----
-
-## 📊 DASHBOARD & GAMIFICATION (3:00 - 3:30)
-
-### Scene 6: User Features
-**[Show dashboard]**
+### Scene 6: Mobility, Governance, and Jobs (2:30 - 3:00)
+**[Screen: Fast-paced showcase of the remaining 3 modules]**
 
 **Narrator:**
-> "When you create an account, you get access to your personal dashboard. Track your vibe check history, watch your streak grow..."
-
-**[Highlight streak counter]**
-
-> "See? '5 days na walang na-scam!' - gamified learning that keeps you coming back."
+> "We also have **Smart Mobility** for AI alternate routing, **Governance Watch** for transparent citizen reporting, and **Jobs & Skills** for AI-powered employment matching. Every feature is fully functional and connected to our real-time database."
 
 ---
 
-## 🛠️ TECH STACK (3:30 - 4:00)
+## 🛠️ TECHNOLOGIES USED (3:00 - 3:30)
 
-### Scene 7: Behind the Scenes
-**[Show tech stack diagram]**
+### Scene 7: Tech Stack Breakdown
+**[Screen: Clean infographic showing the tech stack logos]**
 
 **Narrator:**
-> "Built with cutting-edge technology:
-> - Next.js 15 for blazing-fast performance
-> - TypeScript for reliability
-> - Google Gemini AI for intelligent analysis
-> - Supabase for secure data storage
-> - Tailwind CSS for that beautiful Cyber-Pinoy aesthetic"
-
-**[Show AI disclosure]**
-
-> "We're transparent about our AI usage - it's a tool to assist your critical thinking, not replace it."
+> "To build a system this robust and pre-production ready, we utilized top-tier technologies:
+> - **Next.js 15 (App Router)** and **TypeScript** for our lightning-fast frontend.
+> - **Tailwind CSS** for our responsive, Cyber-Pinoy styling.
+> - **Google Gemini 1.5 Flash API** for the intelligent analysis across all our modules.
+> - **Supabase** acting as our secure PostgreSQL database and authentication provider.
+> - And we deployed seamlessly via **GitHub**."
 
 ---
 
-## 🌟 IMPACT & FUTURE (4:00 - 4:30)
+## 🌟 IMPACT & CLOSING (3:30 - 4:00)
 
-### Scene 8: Vision
-**[Show impact statistics mockup]**
+### Scene 8: Intended Real-World Application
+**[Screen: UgnayPH logo with the SDG icons surrounding it]**
 
 **Narrator:**
-> "VibeCheck PH isn't just an app - it's a movement. We're building digital literacy, one vibe check at a time."
+> "UgnayPH is more than just a prototype. It is a scalable, pre-production ready system designed to be adopted by LGUs and national agencies. By bridging the digital divide, we empower students, commuters, farmers, and every Filipino citizen."
 
-**[Show future features roadmap]**
-
-> "Coming soon: Browser extension, Messenger bot integration, and school partnership programs to reach even more Filipinos."
-
----
-
-## 🎬 CLOSING (4:30 - 5:00)
-
-### Scene 9: Call to Action
-**[Return to landing page]**
+### Scene 9: Sign-off
+**[Screen: "Built by team leader Luigi Balingit. github.com/luigibalingit14/UgnayPH"]**
 
 **Narrator:**
-> "Join us in the fight against disinformation. Because every Filipino deserves access to the truth."
-
-**[Show QR code or URL]**
-
-> "Try VibeCheck PH now at vibecheck.ph"
-
-**[Final tagline on screen]**
-
-> "Paste anywhere. Get the real Vibe. HUWAG MAGING SUS! 🇵🇭"
-
-**[Team credit]**
-> "Thank you for watching. This is our entry for InterCICSkwela Hackathon Challenge #2."
+> "This is UgnayPH, connecting the Philippines to a better tomorrow. Thank you!"
 
 ---
 
-## 📝 Video Production Notes
-
-### Technical Requirements
-- Screen resolution: 1920x1080 (Full HD)
-- Aspect ratio: 16:9
-- Audio: Clear voiceover, background music (royalty-free)
-- Duration: Stay within 3-5 minute limit
-
-### Visuals to Prepare
-- [ ] Landing page loaded and ready
-- [ ] Example texts copied and ready
-- [ ] Dashboard with sample data
-- [ ] Vibe Battle with content ready
-- [ ] Tech stack diagram/slide
-- [ ] Impact statistics mockup
-- [ ] QR code linking to live demo
-
-### Demo Tips
-1. Use pre-filled examples from the app for consistency
-2. Speak slowly and clearly in Taglish
-3. Highlight the Philippine-specific features
-4. Show the meme generator for shareability
-5. Emphasize the educational aspect
-
-### Background Music Suggestions
-- Upbeat, modern Filipino-inspired electronic
-- Lower volume during narration
-- Subtle sound effects for UI interactions
-
----
-
-## 🎤 Narrator Script Summary
-
-**Key phrases to emphasize:**
-- "SUS NA SUS!"
-- "CHILL NA CHILL!"
-- "Huwag maging sus!"
-- "Powered by Google Gemini AI"
-- "Made for Filipinos, by Filipinos"
-
-**Tone:**
-- Friendly and approachable
-- Mix of Filipino and English (Taglish)
-- Educational but not preachy
-- Energetic but sincere
-
----
-
-**Good luck with your video! Kaya 'to! 💪🇵🇭**
+## 📝 PRODUCTION NOTES FOR THE TEAM:
+- **Compliance Check:** This script explicitly states the problem, solution, real-world application, and the technologies used (Frameworks, APIs, AI tools) as required by the guidelines.
+- **Time Check:** Reading at a normal pace of ~130 words per minute, this script will comfortably fit the 3-5 minute requirement.
+- **Visual Rule:** Ensure the demo is a screen-recording of the *actual* functional prototype as per the guideline: "purely conceptual or slide-only presentations... may receive lower evaluations."
