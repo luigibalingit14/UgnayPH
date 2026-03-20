@@ -41,7 +41,7 @@ export default function SignupPage() {
 
       toast({
         title: "Account created!",
-        description: "Welcome to VibeCheck PH! 🇵🇭",
+        description: "Welcome to UgnayPH! 🇵🇭",
         variant: "success",
       });
 
@@ -75,7 +75,7 @@ export default function SignupPage() {
               VC PH
             </div>
           </div>
-          <CardTitle className="text-2xl font-display">Join VibeCheck PH!</CardTitle>
+          <CardTitle className="text-2xl font-display">Join UgnayPH!</CardTitle>
           <CardDescription>
             Gumawa ng account para mag-track ng checks at streaks
           </CardDescription>

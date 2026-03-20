@@ -1,7 +1,7 @@
 {
-  "name": "vibecheck-ph",
+  "name": "ugnayph",
   "version": "1.0.0",
-  "description": "VibeCheck PH - Digital Literacy & Disinformation Combat Tool for Filipinos",
+  "description": "UgnayPH - One platform. Six solutions. Built for every Filipino.",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -1,6 +1,6 @@
 {
-  "name": "VibeCheck PH",
-  "short_name": "VibeCheck",
+  "name": "UgnayPH",
+  "short_name": "UgnayPH",
   "description": "Detect fake news and scams targeting Filipinos with AI-powered analysis",
   "start_url": "/",
   "display": "standalone",
